@@ -38,6 +38,12 @@ variable "recorder_name" {
   default     = "default"
 }
 
+variable "config_exclude_resources" {
+  description = "List of resource types excluded from recorder"
+  type        = list
+  default     = []
+}
+
 variable "delivery_channel_name" {
   description = "The name of the delivery channel."
   type        = string

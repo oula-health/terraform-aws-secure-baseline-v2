@@ -39,9 +39,34 @@ resource "aws_config_configuration_recorder" "recorder" {
   name     = var.recorder_name
   role_arn = var.iam_role_arn
 
-  recording_group {
-    all_supported                 = true
-    include_global_resource_types = var.include_global_resource_types
+  # Option A: leave default
+  dynamic "recording_group" {
+    for_each = var.config_exclude_resources == [] ? [1] : []
+    content {
+      all_supported                 = true
+      include_global_resource_types = var.include_global_resource_types
+    }
+  }
+  #  recording_group {
+  #    all_supported                 = true
+  #    include_global_resource_types = var.include_global_resource_types
+  #  }
+
+  # Option B: propagate excluded resources
+  dynamic "recording_group" {
+    for_each = var.config_exclude_resources == [] ? [] : [1]
+    content {
+      all_supported = false
+      include_global_resource_types = false
+      resource_types = []
+
+      exclusion_by_resource_types {
+        resource_types = var.config_exclude_resources
+      }
+      recording_strategy {
+        use_only = "EXCLUSION_BY_RESOURCE_TYPES"
+      }
+    }
   }
 }
 
