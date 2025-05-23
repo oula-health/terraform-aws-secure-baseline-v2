@@ -321,6 +321,13 @@ variable "config_global_resources_all_regions" {
   default     = false
 }
 
+variable "config_exclude_resources" {
+  description = "List of resource types excluded from recorder"
+  type        = list
+  default     = []
+}
+
+
 # --------------------------------------------------------------------------------------------------
 # Variables for cloudtrail-baseline module.
 # --------------------------------------------------------------------------------------------------
